@@ -1,13 +1,14 @@
-import React, { useCallback, useEffect, useState, memo } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import "./App.css";
-import Controller from "./components/Controller";
 import Items from "./components/Chart";
+import Controller from "./components/Controller";
+import swapSound from "../public/swap.mp3";
 
 const App = memo(() => {
-  const [quantity, setQuantity] = useState(100);
-  const [speed, setSpeed] = useState(1);
+  const [quantity, setQuantity] = useState(50);
+  const [speed, setSpeed] = useState(10);
   const [isSorting, setIsSorting] = useState(false);
-  const [items, setItems] = useState(Array.from(Array(100).keys()));
+  const [items, setItems] = useState(Array.from(Array(50).keys()));
   const [currentIndex, setCurrentIndex] = useState(-2);
 
   const shuffle = useCallback(() => {
@@ -18,14 +19,18 @@ const App = memo(() => {
 
   const sort = useCallback(async () => {
     const array = [...items];
+    const audio = new Audio(swapSound);
+
     for (let i = 0; i < array.length; i++) {
       for (let j = 0; j < array.length; j++) {
         setCurrentIndex(j);
+
         if (array[j] > array[j + 1]) {
           const tmp = array[j];
           array[j] = array[j + 1];
           array[j + 1] = tmp;
           setItems([...array]);
+          audio.play();
           await new Promise((resolve) => setTimeout(resolve, speed));
         }
       }
