@@ -1,0 +1,65 @@
+#root {
+  max-width: 100vw;
+  max-height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+.App {
+  text-align: center;
+  background: #fff;
+}
+
+.controller-container {
+  max-height: 17vh;
+}
+
+input {
+  width: 240px;
+  height: 24px;
+  margin: 24px;
+  font-size: 18px;
+  font-weight: bold;
+  background: rgb(255, 255, 255);
+  border: 2px solid #f4711f;
+  color: #f4711f;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+button {
+  width: 240px;
+  height: 60px;
+  margin: 24px;
+  font-size: 18px;
+  font-weight: bold;
+  background: #f4711f;
+  border: 2px solid white;
+  border-radius: 10px;
+  color: #fff;
+  transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+  background: #000;
+}
+
+.items-container {
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  max-height: 90vh;
+  height: 85vh;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  background: #f4711f;
+  width: 100%;
+  border: 1px black solid;
+}
+
+.active {
+  background: #000;
+}
