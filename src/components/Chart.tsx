@@ -1,27 +1,22 @@
 import React from "react";
+import { useAppSelector } from "../state/hook";
 
-interface ItemsProps {
-  items: number[];
-  currentIndex: number;
-}
+const Items = React.memo(function Items() {
+  const { items, currentIndex } = useAppSelector((state) => state.items);
 
-const Items = React.memo(({ items, currentIndex }: ItemsProps) => {
   return (
     <ul className="items-container">
-      {items.map((item, index) => {
-        return (
-          <li
-            className={
-              currentIndex === index || currentIndex + 1 === index
-                ? "item active"
-                : "item"
-            }
-            key={`item-${item}`}
-            style={{ height: (item + 1) * 4 }}
-            color="##f4711f;"
-          ></li>
-        );
-      })}
+      {items.map((item, index) => (
+        <li
+          key={`item-${item}`}
+          className={
+            currentIndex === index || currentIndex + 1 === index
+              ? "item active"
+              : "item"
+          }
+          style={{ height: item * 4 }}
+        />
+      ))}
     </ul>
   );
 });
