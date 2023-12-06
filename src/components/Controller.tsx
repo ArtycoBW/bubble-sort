@@ -20,7 +20,7 @@ export default memo(function Controller() {
   }, [setQuantity]);
 
   useEffect(() => {
-    setSpeedValue((prev) => Math.min(Math.max(prev, 1), 100));
+    setSpeedValue((prev) => Math.min(Math.max(prev, 1), 50));
   }, [setSpeedValue]);
 
   function shuffle() {
@@ -51,6 +51,7 @@ export default memo(function Controller() {
         value={quantity}
         onChange={handleQuantityChange}
         placeholder="Amount"
+        disabled={isSorting}
       />
       <input
         type="number"

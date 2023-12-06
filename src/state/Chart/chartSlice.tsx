@@ -21,7 +21,6 @@ export const shuffleItems = createAsyncThunk<void, void, { state: RootState }>(
     dispatch(setIsSorting(true));
     const array = Array.from(Array(getState().items.items.length).keys());
     array.sort(() => Math.random() - 0.5);
-
     dispatch(setItems(array));
     dispatch(setCurrentIndex(-1));
     dispatch(setIsSorting(false));
