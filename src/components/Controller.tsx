@@ -1,64 +1,69 @@
 import React, { memo, useCallback, useState, useEffect } from "react";
 import "../App.css";
-import { useAppSelector, useAppDispatch } from "../state/hook";
-import { setItems, setCurrentIndex } from "../state/Chart/chartSlice";
+import { useAppDispatch, useAppSelector } from "../state/hook";
+import {
+  shuffleItems,
+  sortItems,
+  setSpeed,
+  setItems,
+} from "../state/Chart/chartSlice";
 
 export default memo(function Controller() {
   const [quantity, setQuantity] = useState<number>(60);
-  const [speed, setSpeed] = useState<number>(1);
+  const [speed, setSpeedValue] = useState<number>(10);
   const dispatch = useAppDispatch();
-  const { items } = useAppSelector((state) => state.items);
+
+  const isSorting = useAppSelector((state) => state.items.isSorting);
 
   useEffect(() => {
-    setQuantity(Math.min(Math.max(quantity, 1), 200));
-  }, [quantity]);
+    setQuantity((prev) => Math.min(Math.max(prev, 1), 200));
+  }, [setQuantity]);
 
   useEffect(() => {
-    setSpeed(Math.min(Math.max(speed, 1), 1000));
-  }, [speed]);
+    setSpeedValue((prev) => Math.min(Math.max(prev, 1), 100));
+  }, [setSpeedValue]);
 
   function shuffle() {
-    const array = Array.from(Array(quantity).keys());
-    array.sort(() => Math.random() - 0.5);
-    dispatch(setItems([...array]));
+    dispatch(shuffleItems());
   }
 
-  const sort = useCallback(async () => {
-    const array = [...items];
-    for (let i = 0; i < array.length; i++) {
-      for (let j = 0; j < array.length; j++) {
-        dispatch(setCurrentIndex(j));
-        if (array[j] > array[j + 1]) {
-          const tmp = array[j];
-          array[j] = array[j + 1];
-          array[j + 1] = tmp;
-          dispatch(setItems([...array]));
-          await new Promise((resolve) => setTimeout(resolve, speed));
-        }
-      }
-    }
-  }, [items, speed]);
+  const handleSpeedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newSpeed = Math.min(Math.max(+e.target.value, 1), 50);
+    setSpeedValue(newSpeed);
+    dispatch(setSpeed(newSpeed));
+  };
+
+  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuantity = Math.min(Math.max(+e.target.value, 1), 200);
+    setQuantity(newQuantity);
+
+    dispatch(setItems(Array.from(Array(newQuantity).keys())));
+  };
+
+  const sort = useCallback(() => {
+    dispatch(sortItems());
+  }, [dispatch]);
 
   return (
     <div className="controller-container">
       <input
         type="number"
         value={quantity}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setQuantity(Number(e.target.value))
-        }
+        onChange={handleQuantityChange}
         placeholder="Amount"
       />
       <input
         type="number"
         value={speed}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setSpeed(Number(e.target.value))
-        }
+        onChange={handleSpeedChange}
         placeholder="Speed (ms)"
       />
-      <button onClick={shuffle}>Shuffle</button>
-      <button onClick={sort}>Sort</button>
+      <button onClick={shuffle} disabled={isSorting}>
+        Shuffle
+      </button>
+      <button onClick={sort} disabled={isSorting}>
+        Sort
+      </button>
     </div>
   );
 });
